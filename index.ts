@@ -1,8 +1,19 @@
-import { Actor, CollisionType, Color, Engine, vec } from 'excalibur';
+import {
+  Loader,
+  Actor,
+  CollisionType,
+  Color,
+  Engine,
+  ImageSource,
+  Animation,
+  vec,
+} from 'excalibur';
 import { Keys } from 'excalibur/build/dist/Input/Keyboard';
+
+import lazers01Src from './resources/laser/lazers01.png';
+
 // game.js
 
-// start-snippet{create-engine}
 // Create an instance of the engine.
 // I'm specifying that the game be 800 pixels wide by 600 pixels tall.
 // If no dimensions are specified the game will fit to the screen.
@@ -10,7 +21,12 @@ const game = new Engine({
   width: 400,
   height: 600,
 });
-// end-snippet{create-engine}
+const loader = new Loader();
+
+const lazers01 = new ImageSource(lazers01Src);
+const lazers02 = new ImageSource('./resources/laser/lazers02.png');
+loader.addResource(lazers01);
+loader.addResource(lazers02);
 
 // start-snippet{create-paddle}
 // Create an actor with x position of 150px,
@@ -175,7 +191,28 @@ ball.on('exitviewport', () => {
 });
 // end-snippet{lose-condition}
 
-// start-snippet{start-game}
 // Start the engine to begin the game.
-game.start();
-// end-snippet{start-game}
+game.start(loader).then(() => {
+  // resources like ImageSource loaded before game started
+
+  const lazer_animation = new Animation({
+    frames: [
+      {
+        graphic: lazers01.toSprite(),
+        duration: 500,
+      },
+      {
+        graphic: lazers01.toSprite(),
+        duration: 500,
+      },
+    ],
+  });
+  const actor = new Actor({
+    x: 50,
+    y: game.drawHeight - 40,
+    width: 50,
+    height: 50,
+  });
+  actor.graphics.use(lazers01.toSprite());
+  game.add(actor);
+});
