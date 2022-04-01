@@ -9,8 +9,9 @@ import {
   vec,
 } from 'excalibur';
 import { Keys } from 'excalibur/build/dist/Input/Keyboard';
+import { Vector } from 'excalibur/build/dist/Math/vector';
 
-import lazers01Src from './resources/laser/lazers01.png';
+//import lazers01Src from './resources/laser/lazers01.png';
 
 // game.js
 
@@ -23,8 +24,12 @@ const game = new Engine({
 });
 const loader = new Loader();
 
-const lazers01 = new ImageSource(lazers01Src);
-const lazers02 = new ImageSource('./resources/laser/lazers02.png');
+const lazers01 = new ImageSource(
+  'https://raw.githubusercontent.com/erwin314/roundabout/master/resources/laser/lazers01.png'
+);
+const lazers02 = new ImageSource(
+  'https://raw.githubusercontent.com/erwin314/roundabout/master/resources/laser/lazers02.png'
+);
 loader.addResource(lazers01);
 loader.addResource(lazers02);
 
@@ -199,20 +204,23 @@ game.start(loader).then(() => {
     frames: [
       {
         graphic: lazers01.toSprite(),
-        duration: 500,
+        duration: 100,
       },
       {
-        graphic: lazers01.toSprite(),
-        duration: 500,
+        graphic: lazers02.toSprite(),
+        duration: 100,
       },
     ],
   });
+  lazer_animation.frames[0].graphic.scale = new Vector(2, 2);
+  lazer_animation.frames[1].graphic.scale = new Vector(2, 2);
+
   const actor = new Actor({
     x: 50,
     y: game.drawHeight - 40,
     width: 50,
     height: 50,
   });
-  actor.graphics.use(lazers01.toSprite());
+  actor.graphics.use(lazer_animation);
   game.add(actor);
 });
